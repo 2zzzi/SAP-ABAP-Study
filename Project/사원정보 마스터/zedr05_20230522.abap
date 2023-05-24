@@ -1,0 +1,42 @@
+*&---------------------------------------------------------------------*
+*& Report ZEDR05_20230522
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZEDR05_20230522 MESSAGE-ID ZMED05.
+
+INCLUDE ZEDR05_20230522_TOP.
+INCLUDE ZEDR05_20230522_SCR.
+INCLUDE ZEDR05_20230522_F01.
+INCLUDE ZEDR05_20230522_PBO.
+INCLUDE ZEDR05_20230522_PAI.
+
+INITIALIZATION.
+  PERFORM SET_DATE.
+
+START-OF-SELECTION.
+  PERFORM VAILD_INPUT.
+  PERFORM VALID_AUTHO.
+
+  PERFORM SELECT_DATA.
+  PERFORM MODIFY_DATA_1.
+  PERFORM MODIFY_DATA_2.
+  PERFORM MODIFY_DATA_3.
+
+  IF GT_RESULT1[] IS NOT INITIAL.
+    IF GT_RESULT2[] IS NOT INITIAL.
+      IF GT_RESULT3[] IS NOT INITIAL.
+
+        CALL SCREEN 100.
+
+      ELSE.
+        MESSAGE I001.
+        EXIT.
+      ENDIF.
+    ELSE.
+      MESSAGE I001.
+    ENDIF.
+  ELSE.
+    MESSAGE I001.
+    EXIT.
+  ENDIF.
