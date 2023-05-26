@@ -1,0 +1,109 @@
+*&---------------------------------------------------------------------*
+*& Report ZEDR05_20230321
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZEDR05_20230321.
+
+
+"3번
+DATA : GS_ZEDT05_004 TYPE ZEDT05_004.
+
+"4번
+DATA : BEGIN OF GS_ZEDT05_005.
+  INCLUDE STRUCTURE GS_ZEDT05_004.
+  DATA : ZDFLAG TYPE ZEDT05_005-ZDFLAG,
+         ZDGUBUN TYPE ZEDT05_005-ZDGUBUN,
+         ZDDATE TYPE ZEDT05_005-ZDDATE,
+         ZFLAG TYPE ZEDT05_005-ZFLAG,
+  END OF GS_ZEDT05_005.
+
+"5번
+
+SELECT SINGLE * FROM ZEDT05_004
+  INTO GS_ZEDT05_004.
+
+MOVE-CORRESPONDING GS_ZEDT05_004 TO GS_ZEDT05_005.
+
+WRITE : / '5. 3번에서 만든 변수를 MOVE-CORRESPONDING을 통해 4번 변수에 값 할당 후 출력'.
+WRITE : / GS_ZEDT05_005-MANDT,
+          GS_ZEDT05_005-ZORDNO,
+          GS_ZEDT05_005-ZID,
+          GS_ZEDT05_005-ZMATNR,
+          GS_ZEDT05_005-ZMTART,
+          GS_ZEDT05_005-ZMATNAME,
+          GS_ZEDT05_005-ZVOLUM,
+          GS_ZEDT05_005-VRKME,
+          GS_ZEDT05_005-ZNSAMT,
+          GS_ZEDT05_005-ZSLAMT,
+          GS_ZEDT05_005-ZDCAMT,
+          GS_ZEDT05_005-ZDC_FG,
+          GS_ZEDT05_005-ZSALE_FG,
+          GS_ZEDT05_005-ZRET_FG,
+          GS_ZEDT05_005-ZJDATE,
+          GS_ZEDT05_005-ZRDATE.
+
+
+"주분번호, 회원 아이디, 제품번호, 제품명, 수량, 금액
+
+DATA : BEGIN OF GS_TABLE6,
+  ZORDNO TYPE ZEDT05_004-ZORDNO,
+  ZID TYPE ZEDT05_004-ZID,
+  ZMATNR TYPE ZEDT05_004-ZMATNR,
+  ZMTART TYPE ZEDT05_004-ZMTART,
+  ZMATNAME TYPE ZEDT05_004-ZMATNAME,
+  ZVOLUM TYPE ZEDT05_004-ZVOLUM,
+  ZNSAMT TYPE ZEDT05_004-ZNSAMT,
+END OF GS_TABLE6.
+
+
+MOVE-CORRESPONDING GS_ZEDT05_005 TO GS_TABLE6.
+
+WRITE : /.
+WRITE : / '6.주문번호 , 회원ID, 제품번호, 제품명, 수량, 금액필드로 구성된 새로운  변수 선언 후 MOVE를 통해 3번에서 값할당 후 출력'.
+WRITE : / GS_TABLE6-ZORDNO,
+          GS_TABLE6-ZID,
+          GS_TABLE6-ZMATNR,
+          GS_TABLE6-ZMTART,
+          GS_TABLE6-ZMATNAME,
+          GS_TABLE6-ZVOLUM,
+          GS_TABLE6-ZNSAMT.
+
+
+"주문관리테이블과 같은 타입의 테이블 생성
+DATA : GS_ZEDT05_004_2 TYPE ZEDT05_004.
+
+MOVE GS_ZEDT05_004 TO GS_ZEDT05_004_2.
+
+
+WRITE : / GS_ZEDT05_004_2-ZORDNO,
+          GS_ZEDT05_004_2-ZID,
+          GS_ZEDT05_004_2-ZMATNR,
+          GS_ZEDT05_004_2-ZMTART,
+          GS_ZEDT05_004_2-ZMATNAME,
+          GS_ZEDT05_004_2-ZVOLUM,
+          GS_ZEDT05_004_2-ZNSAMT.
+
+"7. CONSTANTS를 이용해 한화계산율이라는 일반상수 선언 후, 금액 필드들에서 곱해 WRITE 출력
+
+CONSTANTS : C_KRWRATE TYPE I VALUE '100'.
+
+DATA : GV_ZNSAMT TYPE I,
+       GV_ZSLAMT TYPE I,
+       GV_ZDCAMT TYPE I.
+
+GV_ZNSAMT = GS_ZEDT05_004_2-ZNSAMT * C_KRWRATE.
+GV_ZSLAMT = GS_ZEDT05_004_2-ZSLAMT * C_KRWRATE.
+GV_ZDCAMT = GS_ZEDT05_004_2-ZDCAMT * C_KRWRATE.
+
+WRITE : / .
+WRITE : / '7.CONSTANTS를 이용해 한화계산율(100)이라는 일반상수 선언 후, 금액필드들에서 곱해 WRITE출력'.
+WRITE : /  '판매금액 : ' , GV_ZNSAMT.
+WRITE : /  '매출금액 : ' , GV_ZSLAMT.
+WRITE : /  '할인금액 : ' , GV_ZDCAMT.
+
+
+"이게 왜 안돼...?
+*WRITE : /  '판매금액 : ' , GS_ZEDT05_004_2-ZNSAMT * C_KRWRATE.
+*WRITE : /  '매출금액 : ' , GS_ZEDT05_004_2-ZSLAMT * C_KRWRATE.
+*WRITE : /  '할인금액 : ' , GS_ZEDT05_004_2-ZDCAMT * C_KRWRATE.

@@ -1,0 +1,45 @@
+*&---------------------------------------------------------------------*
+*& Report ZEDR05_20230518
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZEDR05_20230518 MESSAGE-ID ZMED05.
+
+INCLUDE ZEDR05_20230518_TOP.
+INCLUDE ZEDR05_20230518_SCR.
+INCLUDE ZEDR05_20230518_F01.
+INCLUDE ZEDR05_20230518_PBO.
+INCLUDE ZEDR05_20230518_PAI.
+
+INITIALIZATION.
+  PERFORM SET_DATE.
+
+AT SELECTION-SCREEN OUTPUT.
+  PERFORM SET_SCREEN.
+
+START-OF-SELECTION.
+  PERFORM CHECK_VAILD_INPUT.
+  PERFORM RET_CHECK.
+
+  IF P_R1 = 'X'.
+    PERFORM SELECT_DATA_R1.
+    PERFORM MODIFY_DATA_R1.
+
+    IF GT_ORDER[] IS NOT INITIAL.
+      CALL SCREEN 100.
+    ELSE.
+      MESSAGE I001.
+      EXIT.
+    ENDIF.
+
+  ELSEIF P_R2 = 'X'.
+    PERFORM SELECT_DATA_R2.
+    PERFORM MODIFY_DATA_R2.
+
+    IF GT_DELIVERY[] IS NOT INITIAL.
+      CALL SCREEN 200.
+    ELSE.
+      MESSAGE I001.
+      EXIT.
+    ENDIF.
+  ENDIF.

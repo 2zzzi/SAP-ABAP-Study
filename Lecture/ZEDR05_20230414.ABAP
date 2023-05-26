@@ -1,0 +1,23 @@
+*&---------------------------------------------------------------------*
+*& Report ZEDR05_20230414
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZEDR05_20230414.
+
+DATA : BEGIN OF GS_STUDENT.
+  INCLUDE TYPE ZEDT05_001.
+DATA : END OF GS_STUDENT.
+DATA : GT_STUDENT LIKE TABLE OF GS_STUDENT.
+
+DATA : GV_PNAME(20) TYPE C VALUE 'ZEDR05_20230413'.
+DATA : GV_FORNAME(20) TYPE C VALUE 'GET_DATA'.
+
+TRANSLATE GV_PNAME TO UPPER CASE.
+TRANSLATE GV_FORNAME TO UPPER CASE.
+
+PERFORM (GV_FORNAME) IN PROGRAM (GV_PNAME) IF FOUND CHANGING GT_STUDENT.
+
+LOOP AT GT_STUDENT INTO GS_STUDENT.
+  WRITE :/ GS_STUDENT-ZCODE, GS_STUDENT-ZKNAME.
+ENDLOOP.

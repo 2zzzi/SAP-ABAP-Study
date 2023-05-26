@@ -1,0 +1,18 @@
+*&---------------------------------------------------------------------*
+*&  Include           ZEDR05_20230524_TOP
+*&---------------------------------------------------------------------*
+
+DATA : GS_STUDENT TYPE ZEDT05_001.
+DATA : GT_STUDENT LIKE TABLE OF GS_STUDENT.
+
+DATA : GS_FIELDCAT TYPE LVC_S_FCAT,
+       GT_FIELDCAT TYPE LVC_T_FCAT.
+DATA : GS_SORT TYPE LVC_S_SORT,
+       GT_SORT TYPE LVC_T_SORT.
+DATA : GS_LAYOUT TYPE LVC_S_LAYO.
+DATA : GS_VARIANT TYPE DISVARIANT.
+
+DATA : GC_DOCKING TYPE REF TO CL_GUI_DOCKING_CONTAINER.
+DATA : GC_GRID TYPE REF TO CL_GUI_ALV_GRID.
+
+DATA : OK_CODE TYPE SY-UCOMM.
